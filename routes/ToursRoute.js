@@ -5,13 +5,16 @@ const { route } = require('./UsersRoute');
 //ROUTES
 const router = express.Router();
 
-router.param('id', tourController.cheakID);
+// router.param('id', tourController.cheakID);
 
+router
+    .route('/top-5-cheap')
+    .get(tourController.aliasTopTours, tourController.getAllTours);
 
 router
     .route('/')
     .get(tourController.getAllTours)
-    .post(tourController.cheakBody, tourController.createTour);
+    .post(tourController.createTour);
 
 router
     .route('/:id')

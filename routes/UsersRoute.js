@@ -2,6 +2,7 @@ const express = require ('express');
 const userController = require('./../controllers/userController');
 
 //USERS
+//all
 
 
 const router = express.Router();
