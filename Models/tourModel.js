@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
-
+const slugify  = require('slugify');
+const validator = require('validator');
 
 const tourSchema = new mongoose.Schema({
 
@@ -8,8 +9,12 @@ const tourSchema = new mongoose.Schema({
         type:String,
         required: [true, 'A tour must have a name'],
         unique: true,
-        trim:true
+        trim:true,
+        maxlength:[40, 'A tour name must have less or equal then 40 characters'],
+        minlength:[10, 'A tour name must have more or equal then 10 characters'],
+        // validate:validator.isAlpha
     },
+    slug: String,
     duration:
     {
         type: Number,
@@ -23,12 +28,19 @@ const tourSchema = new mongoose.Schema({
     difficulty:
     {
         type:String,
-        required: [true, 'A tour must have a difficulty']
+        required: [true, 'A tour must have a difficulty'],
+        enum:
+        {
+            values:['easy','medium','difficult'],
+            message:'Difficulty is either: easy,medium,difficult'
+        }
     },
     ratingAverage: 
     {
         type: Number,
-        default: 4.5
+        default: 4.5,
+        min: [1, 'Rating must be above 1.0'],
+        max: [5, 'Rating must be below/equal 5.0']
     },
     ratingQuantity:
     {
@@ -40,7 +52,19 @@ const tourSchema = new mongoose.Schema({
         type: Number,
         required: [true, 'A tour must have a project']
     },
-    priceDiscount:Number,
+    priceDiscount:
+    {
+        type: Number,
+        validate:
+        {
+            validator:function(val)
+            {
+                //*new document only,not for update
+                return val < this.price;
+            },
+            message: 'Discount price should be below regular price',
+        } 
+    },
     summary:
     {
         type:String,
@@ -64,9 +88,46 @@ const tourSchema = new mongoose.Schema({
         default: Date.now(),
         select: false
     },
-    startDates: [Date]
+    startDates: [Date],
+    secretTour:
+    {
+        type:Boolean,
+        default:false
+    }
 
+},
+{
+    toJSON: { virtuals: true },
+    toObject:{ virtuals: true }
 });
+
+tourSchema.virtual('durationWeeks').get(function()
+{
+    return this.duration/7;
+}
+);
+
+//!DOCUMENT MIDDLEWARE
+tourSchema.pre('save', function(next)
+{
+    this.slug = slugify(this.name, { lower: true });
+    next();
+});
+
+//!QUERYMIDDLEWARE
+tourSchema.pre(/^find/, function(next)
+{
+    this.find( { secretTour: { $ne: true } });
+    next();
+});
+
+//!AGGREGATION MIDDLEWARE
+tourSchema.pre('aggregate', function(next)
+{
+    this.pipeline().unshift({ $match: { secretTour: { $ne: true } } });
+    next();
+});
+
 
 const Tour = mongoose.model('Tour', tourSchema);
 

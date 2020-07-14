@@ -1,5 +1,13 @@
 const mongoose = require('mongoose');
 const dotenv = require('dotenv');
+
+//!error    
+process.on('uncaughtException', err => {
+    console.log('Unhandled Exception! 😓😕 Shutting down....'.red.bgWhite);
+    console.log(err.name, err.message);
+    process.exit(1);
+});
+
 dotenv.config({ path: './config.env' });
 const colors = require('colors');
 const app = require('./app');
@@ -18,7 +26,7 @@ mongoose.connect(DB, {
     useUnifiedTopology: true
 }).then(() =>{
     //console.log(con.connection);
-    console.log('DB connection successfull!!..🙄🙄'.blue);
+    console.log('DB connection successfull!!..🙄🙄'.cyan);
 });
 
 
@@ -28,6 +36,20 @@ mongoose.connect(DB, {
 const port = process.env.PORT;
 app.listen(port, () =>
 {
-    console.log(`App Running on port ${port}🤨🤨`.bold.green);
+    console.log(`App Running on port ${port}🤨🤨`.green);
 });
 
+
+
+//!error 
+process.on('unhandledRejection', err => {
+    console.log('Unhandled Rejection! 😓😕 Shutting down....'.red.bgWhite);
+    console.log(err.name,err.message);
+    server.close(() =>{
+        process.exit(1);
+    });
+});
+
+
+
+// console.log(x);

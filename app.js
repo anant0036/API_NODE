@@ -2,6 +2,8 @@ const express   = require('express');
 const morgan    = require('morgan');
 const app       = express();
 
+const AppError  = require('./utils/appError'); 
+const globalErrorHandler = require('./controllers/errorController');
 const tourRouter = require('./routes/ToursRoute');
 const userRouter = require('./routes/UsersRoute');
 
@@ -37,20 +39,29 @@ app.use((req,res, next) =>
 app.use('/api/v1/tours', tourRouter);
 app.use('/api/v1/users', userRouter);
 
+//!error page
+app.all('*',(req, res, next) =>{
+    // res.status(404).json({
+    //     status:'fail',
+    //     message: `Can't find ${req.originalUrl} on this server !`
+    // });
+
+    // const err = new Error(`Can't find ${req.originalUrl} on this server !`);
+    // err.status = 'fail';
+    // err.statusCode = 404;
+
+    next(new AppError(`Can't find ${req.originalUrl} on this server !`, 404));
+});
+
+//!Error handlers
+
+app.use(globalErrorHandler);
 
 
-// app.get('/', (req, res) =>
-// {
-//     res
-//     .status(200)
-//     .json({message:'hello from the server side!!  😎😎' , app:'Natours'});
-// });
 
-// app.post('/', (req, res) =>
-// {
-//     res
-//     .send('You can post to this endpoint');
-// });
 
-//SERVER 
+
+
+
+//*export 
 module.exports = app;
