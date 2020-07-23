@@ -2,11 +2,11 @@ const mongoose = require('mongoose');
 const dotenv = require('dotenv');
 
 //!error    
-process.on('uncaughtException', err => {
-    console.log('Unhandled Exception! 😓😕 Shutting down....'.red.bgWhite);
-    console.log(err.name, err.message);
-    process.exit(1);
-});
+// process.on('uncaughtException', err => {
+//     console.log('Unhandled Exception! 😓😕 Shutting down....'.red.bgWhite);
+//     console.log(err.name, err.message);
+//     process.exit(1);
+// });
 
 dotenv.config({ path: './config.env' });
 const colors = require('colors');
@@ -42,13 +42,13 @@ app.listen(port, () =>
 
 
 //!error 
-process.on('unhandledRejection', err => {
-    console.log('Unhandled Rejection! 😓😕 Shutting down....'.red.bgWhite);
-    console.log(err.name,err.message);
-    server.close(() =>{
-        process.exit(1);
-    });
-});
+// process.on('unhandledRejection', err => {
+//     console.log('Unhandled Rejection! 😓😕 Shutting down....'.red.bgWhite);
+    // console.log(err.name,err.message);
+//     server.close(() =>{
+//         process.exit(1);
+//     });
+// });
 
 
 
