@@ -27,6 +27,8 @@ mongoose.connect(DB, {
 }).then(() =>{
     //console.log(con.connection);
     console.log('DB connection successfull!!..🙄🙄'.cyan);
+    console.log('------------------------------------'.bgYellow)
+
 });
 
 
@@ -36,6 +38,7 @@ mongoose.connect(DB, {
 const port = process.env.PORT;
 app.listen(port, () =>
 {
+    console.log('------------------------------------'.bgYellow)
     console.log(`App Running on port ${port}🤨🤨`.green);
 });
 
