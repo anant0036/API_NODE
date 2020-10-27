@@ -26,7 +26,8 @@ mongoose.connect(DB, {
     useUnifiedTopology: true
 }).then(() =>{
     //console.log(con.connection);
-    console.log('DB connection successfull!!..🙄🙄'.cyan);
+    console.log('DB connection successfull!!..🙄🙄\n'.cyan);
+    console.log('http://127.0.0.1:3000/ \n'.yellow);
     console.log('------------------------------------'.bgYellow)
 
 });
@@ -38,8 +39,8 @@ mongoose.connect(DB, {
 const port = process.env.PORT;
 app.listen(port, () =>
 {
-    console.log('------------------------------------'.bgYellow)
-    console.log(`App Running on port ${port}🤨🤨`.green);
+    console.log('------------------------------------\n'.bgYellow)
+    console.log(`App Running on port ${port}🤨🤨\n`.green);
 });
 
 
