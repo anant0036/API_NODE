@@ -24,7 +24,7 @@ const createSendToken = (user, statusCode, res) => {
       ),
       httpOnly: true
     };
-    if (process.env.NODE_ENV === 'production') cookieOptions.secure = true;
+    if (process.env.NODE_ENV === 'development') cookieOptions.secure = true;
   
     res.cookie('jwt', token, cookieOptions);
   
@@ -93,6 +93,10 @@ exports.protect = catchAsync(async(req, res, next) => {
     if(req.headers.authorization && req.headers.authorization.startsWith('Bearer'))
     {
         token = req.headers.authorization.split(' ')[1];
+    }
+    else if(req.cookies.jwt)
+    {
+      token = req.cookies.jwt;
     }
     if(!token)
     {
